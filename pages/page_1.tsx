@@ -1,21 +1,6 @@
 import { Flex, Text } from "@chakra-ui/react";
 import { GetServerSideProps } from "next";
-import { useEffect } from "react";
-
-type fontType = "GOOGLE" | "CUSTOM" | "SELECTED";
-interface fontData { type: fontType, fontUrl: string, fontFamily: string } 
-
-const googleFontMockData: fontData = {
-    type: "GOOGLE",
-    fontUrl: "https://fonts.googleapis.com/css2?family=Rubik+Moonrocks&display=swap",
-    fontFamily: "Rubik Moonrocks"
-}
-
-const customFontMockData: fontData = {
-    type: "CUSTOM",
-    fontUrl: "/Calistha.ttf",
-    fontFamily: "Calistha"
-}
+import { customFontMockData, fontData } from "./_app";
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const data: { font: fontData } = {
@@ -27,26 +12,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 }
 
 const Page1 = ({ font }: { font: fontData }) => {
-
-    useEffect(() => {
-        if(font.type == "GOOGLE") {
-            const linkElement = document.createElement('link');
-            linkElement.rel = 'stylesheet'
-            linkElement.id = 'google-font'
-            document.head.appendChild(linkElement)
-            linkElement.href = font.fontUrl;
-            localStorage.setItem('dynamic-font', font.fontFamily);
-        }
-        if(font.type == "CUSTOM") {
-            const loadFont = async () => {
-                const fontFace = new FontFace(font.fontFamily, `url(${font.fontUrl})`);
-                (document as any).fonts.add(fontFace);
-                await fontFace.load();
-                localStorage.setItem('dynamic-font', font.fontFamily);
-            }
-            loadFont();
-        }
-    }, [])
     
     return (
         <Flex direction={'column'}>

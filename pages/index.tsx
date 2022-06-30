@@ -4,12 +4,12 @@ import Head from 'next/head'
 import { ChangeEvent, SyntheticEvent, useState } from 'react';
 
 const Home: NextPage = () => {
-  const [selectedFontFile, setSelectedFontFile] = useState<File | null>(null);
+  const [selectedFontFile, setSelectedFontFile] = useState<{font: File, fontName: string} | null>(null);
   let fontPicker: HTMLInputElement | null
   
   const onGetFont = (event: ChangeEvent<HTMLInputElement>) => {
     if(event.target.files && event.target.files.length > 0) {
-      setSelectedFontFile(event.target.files[0]);
+      setSelectedFontFile({font: event.target.files[0], fontName: event.target.files[0].name.replaceAll('.', '-')});
     }
     if(fontPicker) {
       fontPicker.value = "";
@@ -22,26 +22,9 @@ const Home: NextPage = () => {
 
   const setFont = async () => {
     if(selectedFontFile) {
-      const fontUrl = URL.createObjectURL(selectedFontFile);
-
-      const fontFace = new FontFace('dynamic-font', `url(${fontUrl})`);
-      (document as any).fonts.add(fontFace);
-      await fontFace.load();
-
-      // var dynamic_font = document.createElement('style');
-      // dynamic_font.appendChild(document.createTextNode(
-      //   `@font-face {
-      //       font-family: 'dynamic-font';
-      //       src: url(${fontUrl});
-      //   }`
-      // ));
-      // document.head.appendChild(dynamic_font);
-
-      //const font = document.createElement('link');
-      //font.rel='stylesheet'
-      //font.id = 'dynamic-font'
-      //document.head.appendChild(font)
-      //font.href = fontUrl;
+      const fontUrl = URL.createObjectURL(selectedFontFile.font);
+      localStorage.setItem('fontData', JSON.stringify({font: fontUrl, fontName: selectedFontFile.fontName}))
+      window.dispatchEvent(new StorageEvent('storage', { url: window.location.href, key: 'fontData',  newValue: JSON.stringify({font: fontUrl, fontName: selectedFontFile.fontName}) }));
     }
   }
 
@@ -65,7 +48,8 @@ const Home: NextPage = () => {
         selectedFontFile != null && 
         <Flex p = "30px" position={"relative"} bg = "gray.100" borderRadius={"10px"} mt = "30px" w = "100%" direction={"column"}>
           <CloseButton onClick = {onDeleteFont} position={"absolute"} top = "5px" right={"5px"} />
-          <Button mt = "10px" bg = "green.200" onClick={setFont}>Save and Active</Button>
+          <Input mt = "20px" value = {selectedFontFile.fontName} onChange={(event) => setSelectedFontFile({ font: selectedFontFile.font, fontName: event.target.value })} />
+          <Button mt = "20px" bg = "green.200" onClick={setFont}>Save and Active</Button>
         </Flex>
       }
 

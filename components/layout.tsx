@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import Header from "./header";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-    const [font, setFont] = useState<string | null>(null);
+    /* const [font, setFont] = useState<string | null>(null);
     
     useEffect(() => {
         const initialFont = localStorage.getItem('dynamic-font');
@@ -17,9 +17,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
     if(font == null) {
         return <></>
-    }
+    } */
 
-    return <Flex fontFamily={font} direction={"column"} w = "100%">
+    return <Flex /* fontFamily={font} */ direction={"column"} w = "100%">
         <Header />
         <Flex direction={"column"} p = "30px">
             {children}

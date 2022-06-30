@@ -1,7 +1,18 @@
 import { Flex, Text } from "@chakra-ui/react";
-import { NextPage } from "next";
+import { GetServerSideProps } from "next";
+import { fontData, googleFontMockData, mockApi } from "./_app";
 
-const Page2: NextPage = () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+    //await mockApi();
+    const data: { font: fontData } = {
+        font: googleFontMockData
+    }
+    return {
+        props: data
+    }
+}
+
+const Page2 = ({ font }: { font: fontData }) => {
     return (
         <Flex direction={'column'}>
             <Text fontWeight={"light"} fontSize={"14px"}>This is LIGHT_WEIGHT Text with font size of 14</Text>
